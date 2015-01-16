@@ -24,7 +24,7 @@ func BenchmarkGet(b *testing.B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		v := c.Get("512")
+		v, _ := c.Get("512")
 		if v == nil {
 			panic("error")
 		}

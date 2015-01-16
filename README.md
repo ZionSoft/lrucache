@@ -20,7 +20,7 @@ value := myCacheableValue{}
 cache.Set("key", value)
 
 // get value from the cache
-v := cache.Get("key")
+v, ok := cache.Get("key")
 ```
 
 License

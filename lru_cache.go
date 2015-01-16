@@ -38,17 +38,17 @@ func New(capacity uint64) *LRUCache {
 	}
 }
 
-// Get returns the value for key or nil.
-func (lru *LRUCache) Get(key string) Value {
+// Get returns the value for key.
+func (lru *LRUCache) Get(key string) (Value, bool) {
 	lru.mu.RLock()
 	defer lru.mu.RUnlock()
 
 	e := lru.items[key]
 	if e == nil {
-		return nil
+		return nil, false
 	}
 	lru.list.MoveToFront(e)
-	return e.Value.(*item).value
+	return e.Value.(*item).value, true
 }
 
 // Set caches value for key.

@@ -35,7 +35,7 @@ func TestSimpleCache(t *testing.T) {
 	value := &cacheValue{size}
 
 	c := New(100)
-	if v := c.Get(key); v != nil {
+	if v, b := c.Get(key); b {
 		t.Errorf("LRUCache has incorrect value for key(%v): %v", key, v)
 	}
 
@@ -43,7 +43,7 @@ func TestSimpleCache(t *testing.T) {
 	if c.Size() != size {
 		t.Errorf("size = %v, want %v", c.Size(), size)
 	}
-	if v := c.Get(key); v.(*cacheValue) != value {
+	if v, _ := c.Get(key); v.(*cacheValue) != value {
 		t.Errorf("%v = %v, want %v", key, v, value)
 	}
 
@@ -53,7 +53,7 @@ func TestSimpleCache(t *testing.T) {
 	if c.Size() != size2 {
 		t.Errorf("size = %v, want %v", c.Size(), size2)
 	}
-	if v := c.Get(key); v.(*cacheValue) != value2 {
+	if v, _ := c.Get(key); v.(*cacheValue) != value2 {
 		t.Errorf("%v = %v, want %v", key, v, value2)
 	}
 }
@@ -74,7 +74,7 @@ func TestCapacity(t *testing.T) {
 	if c.Size() != capacity {
 		t.Errorf("size = %v, want %v", c.Size(), capacity)
 	}
-	if v := c.Get("key1"); v != nil {
+	if _, b := c.Get("key1"); b {
 		t.Errorf("key1 is not evicted")
 	}
 }
@@ -86,12 +86,12 @@ func TestDelete(t *testing.T) {
 
 	c := New(100)
 	c.Set(key, value)
-	if v := c.Get(key); v.(*cacheValue) != value {
+	if v, _ := c.Get(key); v.(*cacheValue) != value {
 		t.Errorf("%v = %v, want %v", key, v, value)
 	}
 
 	c.Delete("key2")
-	if v := c.Get(key); v.(*cacheValue) != value {
+	if v, _ := c.Get(key); v.(*cacheValue) != value {
 		t.Errorf("%v = %v, want %v", key, v, value)
 	}
 	if c.Size() != size {
@@ -99,7 +99,7 @@ func TestDelete(t *testing.T) {
 	}
 
 	c.Delete(key)
-	if v := c.Get(key); v != nil {
+	if _, b := c.Get(key); b {
 		t.Errorf("failed to delete %v", key)
 	}
 	if c.Size() != 0 {
@@ -113,12 +113,12 @@ func TestClear(t *testing.T) {
 
 	c := New(100)
 	c.Set(key, value)
-	if v := c.Get(key); v.(*cacheValue) != value {
+	if v, _ := c.Get(key); v.(*cacheValue) != value {
 		t.Errorf("%v = %v, want %v", key, v, value)
 	}
 
 	c.Clear()
-	if v := c.Get(key); v != nil {
+	if _, b := c.Get(key); b {
 		t.Errorf("failed to delete %v", key)
 	}
 	if c.Size() != 0 {
